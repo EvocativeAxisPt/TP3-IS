@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
+    <!-- css para o leaf  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+
+
+</head>
+<html>
+    <style>
+        #map { height: 480px; }
+    </style>
+<body>
+    <div id="map"></div>
+
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+
+
+   <!-- Criar mapa-->
+    <script>
+// var mymap = L.map('map').setView([51.505, -0.09], 13);
+
+//teste com outro mapa ( funciona !)
+// L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=ChCQog4uwAusgokJsA6C',{
+//    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+// }).addTo(mymap)
+
+token = "pk.eyJ1IjoiaHVnb3BlcmVpcmFpcGMiLCJhIjoiY2trbGplcDZlMnowazJ1b2M3cnN3dTBuMCJ9.5OprazTrI2arMM8qFtTV6g";
+
+/*
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: token
+}).addTo(mymap);
+
+*/
+    </script>
+
+ 
+
+<script>
+
+
+//--------------------------------------------------        Layers        ---------------------------------------------------------//
+
+var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {id: 'mapbox/light-v10',accessToken: token, tileSize: 512, zoomOffset: -1}),
+    streets   = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {id: 'mapbox/streets-v11',accessToken: token, tileSize: 512, zoomOffset: -1});
+
+
+    var littleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.'),
+    denver    = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.'),
+    aurora    = L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.'),
+    golden    = L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.');
+
+    var cities = L.layerGroup([littleton, denver, aurora, golden]);
+
+var mymap = L.map('map', {
+    center: [39.73, -104.99],
+    zoom: 10,
+    layers: [grayscale, cities]
+});
+
+var baseMaps = {
+    "Grayscale": grayscale,
+    "Streets": streets
+};
+
+var overlayMaps = {
+    "Cities": cities
+};
+
+L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+
+
+
+    </script>
+
+
+
+
+   <!-- Criar figuras-->
+   <script>
+    var marker = L.marker([51.5,-0.09]).addTo(mymap);
+
+    var circulo = L.circle([51.508,-0.11],{
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacy: 0.5,
+        radius: 500
+    }).addTo(mymap);
+
+    var poligno = L.polygon([
+        [51.509,-0.08],
+        [51.503,-0.06],
+        [51.51,-0.047],
+
+    ]).addTo(mymap);
+
+    //popups
+    marker.bindPopup("<b>Teste</b> <br> Eu sou um popup")
+    circulo.bindPopup("Eu sou um circulo")
+    poligno.bindPopup("Eu sou um poligno")
+
+    var popup = L.popup()
+.setLatLng([51.5, -0.09])
+.setContent("I am a standalone popup.")
+.openOn(mymap);
+
+
+//clicks
+var popup = L.popup();
+
+function onMapClick(e) {
+popup
+    .setLatLng(e.latlng)
+    .setContent("You clicked the map at " + e.latlng.toString())
+    .openOn(mymap);
+}
+
+mymap.on('click', onMapClick);
+</script>
+
+
+
+
+</body>
+
+</html>
+
+
+
+
