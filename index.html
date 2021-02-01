@@ -7,15 +7,12 @@
   />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-  <!-- css para o leaf  -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""
   />
-</head>
-<html>
   <style>
     body {
       background-color: aliceblue;
@@ -30,49 +27,24 @@
       margin-bottom: 0%;
     }
   </style>
+</head>
+<html>
   <body>
     <div id="container">
       <h1>Trabalho Final de IS</h1>
     </div>
     <div id="map"></div>
 
-    <script
-      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-      crossorigin=""
-    ></script>
-
-    <!-- Criar mapa-->
     <script>
-      // var map = L.map('map').setView([51.505, -0.09], 13);
-
-      //teste com outro mapa ( funciona !)
-      // L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=ChCQog4uwAusgokJsA6C',{
-      //    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
-      // }).addTo(map)
+      src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js";
+      integrity =
+        "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==";
+      crossorigin = "";
 
       token =
         "pk.eyJ1IjoiaHVnb3BlcmVpcmFpcGMiLCJhIjoiY2trbGplcDZlMnowazJ1b2M3cnN3dTBuMCJ9.5OprazTrI2arMM8qFtTV6g";
 
-      /*
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: token
-}).addTo(map);
-
-*/
-    </script>
-
-    <script>
-//--------------------------------------------------        Layers        ---------------------------------------------------------//
-
-
-
-var grayscale = L.tileLayer(
+      var grayscale = L.tileLayer(
           "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
           {
             id: "mapbox/light-v10",
@@ -106,14 +78,13 @@ var grayscale = L.tileLayer(
         layers: [grayscale, cities],
       });
 
-
-//http://localhost:8080/geoserver/Aulas_SIG/wms?service=WMS Link Hugo
-//http://localhost:8080/geoserver/AULAS_SIG/wms?service=WMS Link Helder
+      //http://localhost:8080/geoserver/Aulas_SIG/wms?service=WMS Link Hugo
+      //http://localhost:8080/geoserver/AULAS_SIG/wms?service=WMS Link Helder
 
       var zonaArdida = L.tileLayer.wms(
         "http://localhost:8080/geoserver/AULAS_SIG/wms?service=WMS",
         {
-          layers: "ardida_2018",  
+          layers: "ardida_2018",
           format: "image/png",
           transparent: true,
         }
@@ -129,63 +100,55 @@ var grayscale = L.tileLayer(
         }
       );
 
+      var baseMaps = {
+        Grayscale: grayscale,
+        Streets: streets,
+      };
 
+      var overlayMaps = {
+        Cities: cities,
+        "Zona Ardida": zonaArdida,
+        Caop: caop2019,
+      };
 
-var baseMaps = {
-    "Grayscale": grayscale,
-    "Streets": streets,
-};
+      L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-var overlayMaps = {
-    "Cities": cities,
-    "Zona Ardida" : zonaArdida,
-    "Caop": caop2019,
-};
+      var marker = L.marker([40.5, -7.89]).addTo(map);
 
+      var circulo = L.circle([41.55, -8.55], {
+        color: "red",
+        fillColor: "#f03",
+        fillOpacy: 1,
+        radius: 5000,
+      }).addTo(map);
 
-L.control.layers(baseMaps, overlayMaps).addTo(map);
+      var poligno = L.polygon([
+        [41.4863, -8.08],
+        [41.3, -8.31],
+        [41.51, -8.47],
+      ]).addTo(map);
 
-    //------------------------------------------------- GEOSERVER LAYERS -----------------------------------------------------//
-  </script>
+      //popups
+      circulo.bindPopup("Eu sou um circulo");
+      poligno.bindPopup("Eu sou um poligno");
+      marker.bindPopup("<b>Teste</b> <br> Eu sou um popup");
 
-<!-- Criar figuras-->
-<script>
-  var marker = L.marker([51.5, -0.09]).addTo(map);
+      var popup = L.popup()
+        .setLatLng([41.522717, -8.34673])
+        .setContent("Olá.")
+        .openOn(map);
 
-  var circulo = L.circle([51.508, -0.11], {
-    color: "red",
-    fillColor: "#f03",
-    fillOpacy: 0.5,
-    radius: 500,
-  }).addTo(map);
+      //clicks
+      var popup = L.popup();
 
-  var poligno = L.polygon([
-    [51.509, -0.08],
-    [51.503, -0.06],
-    [51.51, -0.047],
-  ]).addTo(map);
+      function onMapClick(e) {
+        popup
+          .setLatLng(e.latlng)
+          .setContent("You clicked the map at " + e.latlng.toString())
+          .openOn(map);
+      }
 
-  //popups
-  marker.bindPopup("<b>Teste</b> <br> Eu sou um popup");
-  circulo.bindPopup("Eu sou um circulo");
-  poligno.bindPopup("Eu sou um poligno");
-
-  var popup = L.popup()
-    .setLatLng([51.5, -0.09])
-    .setContent("I am a standalone popup.")
-    .openOn(map);
-
-  //clicks
-  var popup = L.popup();
-
-  function onMapClick(e) {
-    popup
-      .setLatLng(e.latlng)
-      .setContent("You clicked the map at " + e.latlng.toString())
-      .openOn(map);
-  }
-
-  map.on("click", onMapClick);
-</script>
-</body>
+      map.on("click", onMapClick);
+    </script>
+  </body>
 </html>
