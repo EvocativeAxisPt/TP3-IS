@@ -68,9 +68,11 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     </script>
 
     <script>
-      //--------------------------------------------------        Layers        ---------------------------------------------------------//
+//--------------------------------------------------        Layers        ---------------------------------------------------------//
 
-      var grayscale = L.tileLayer(
+
+
+var grayscale = L.tileLayer(
           "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
           {
             id: "mapbox/light-v10",
@@ -104,11 +106,16 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
         layers: [grayscale, cities],
       });
 
+
+//http://localhost:8080/geoserver/Aulas_SIG/wms?service=WMS Link Hugo
+//http://localhost:8080/geoserver/AULAS_SIG/wms?service=WMS Link Helder
+
       var zonaArdida = L.tileLayer.wms(
         "http://localhost:8080/geoserver/AULAS_SIG/wms?service=WMS",
         {
-          layers: "ardida_2018",
-          transparent: false,
+          layers: "ardida_2018",  
+          format: "image/png",
+          transparent: true,
         }
       );
 
@@ -116,64 +123,68 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
         "http://localhost:8080/geoserver/AULAS_SIG/wms?service=WMS",
         {
           layers: "Cont_AAD_CAOP2019",
-          transparent: false,
+          format: "image/png",
+          transparent: true,
         }
       );
 
-      var baseMaps = {
-        Grayscale: grayscale,
-        Ruas: streets,
-        "Zona Ardida": zonaArdida,
-        CAOP: caop2019,
-      };
 
-      var overlayMaps = {
-        Cidades: cities,
-      };
 
-      L.control.layers(baseMaps, overlayMaps).addTo(map);
+var baseMaps = {
+    "Grayscale": grayscale,
+    "Streets": streets,
+};
 
-      //------------------------------------------------- GEOSERVER LAYERS -----------------------------------------------------//
-    </script>
+var overlayMaps = {
+    "Cities": cities,
+    "Zona Ardida" : zonaArdida,
+    "Caop": caop2019,
+};
 
-    <!-- Criar figuras-->
-    <script>
-      var marker = L.marker([51.5, -0.09]).addTo(map);
 
-      var circulo = L.circle([51.508, -0.11], {
-        color: "red",
-        fillColor: "#f03",
-        fillOpacy: 0.5,
-        radius: 500,
-      }).addTo(map);
+L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-      var poligno = L.polygon([
-        [51.509, -0.08],
-        [51.503, -0.06],
-        [51.51, -0.047],
-      ]).addTo(map);
+    //------------------------------------------------- GEOSERVER LAYERS -----------------------------------------------------//
+  </script>
 
-      //popups
-      marker.bindPopup("<b>Teste</b> <br> Eu sou um popup");
-      circulo.bindPopup("Eu sou um circulo");
-      poligno.bindPopup("Eu sou um poligno");
+<!-- Criar figuras-->
+<script>
+  var marker = L.marker([51.5, -0.09]).addTo(map);
 
-      var popup = L.popup()
-        .setLatLng([51.5, -0.09])
-        .setContent("I am a standalone popup.")
-        .openOn(map);
+  var circulo = L.circle([51.508, -0.11], {
+    color: "red",
+    fillColor: "#f03",
+    fillOpacy: 0.5,
+    radius: 500,
+  }).addTo(map);
 
-      //clicks
-      var popup = L.popup();
+  var poligno = L.polygon([
+    [51.509, -0.08],
+    [51.503, -0.06],
+    [51.51, -0.047],
+  ]).addTo(map);
 
-      function onMapClick(e) {
-        popup
-          .setLatLng(e.latlng)
-          .setContent("You clicked the map at " + e.latlng.toString())
-          .openOn(map);
-      }
+  //popups
+  marker.bindPopup("<b>Teste</b> <br> Eu sou um popup");
+  circulo.bindPopup("Eu sou um circulo");
+  poligno.bindPopup("Eu sou um poligno");
 
-      map.on("click", onMapClick);
-    </script>
-  </body>
+  var popup = L.popup()
+    .setLatLng([51.5, -0.09])
+    .setContent("I am a standalone popup.")
+    .openOn(map);
+
+  //clicks
+  var popup = L.popup();
+
+  function onMapClick(e) {
+    popup
+      .setLatLng(e.latlng)
+      .setContent("You clicked the map at " + e.latlng.toString())
+      .openOn(map);
+  }
+
+  map.on("click", onMapClick);
+</script>
+</body>
 </html>
