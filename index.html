@@ -56,6 +56,8 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 //--------------------------------------------------        Layers        ---------------------------------------------------------//
 
 
+
+
 var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {id: 'mapbox/light-v10',accessToken: token, tileSize: 512, zoomOffset: -1}),
     streets   = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {id: 'mapbox/streets-v11',accessToken: token, tileSize: 512, zoomOffset: -1});
 
@@ -73,9 +75,11 @@ var mymap = L.map('map', {
     layers: [grayscale, cities]
 });
 
-var wmsLayer = L.tileLayer.wms('http://localhost:8080/geoserver/Aulas_SIG/wms?service=WMS&version=1.1.0&request=GetMap&layers=Aulas_SIG%3Arede_viaria&bbox=-118534.859375%2C-295828.09375%2C163304.5%2C275711.625&width=378&height=768&srs=EPSG%3A3763&styles=&format=application/openlayers', {
-    layers: 'fogos:ardida_2018'
-});
+var wmsLayer= L.tileLayer.wms("http://localhost:8080/geoserver/Aulas_SIG/wms?service=WMS", {
+        layers: 'ardida_2018',
+        transparent: false
+    });
+
 
 var baseMaps = {
     "Grayscale": grayscale,
